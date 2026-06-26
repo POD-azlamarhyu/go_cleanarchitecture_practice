@@ -1,0 +1,4 @@
+@startuml
+!include domainmodel_discussion.pu
+!include domainmodel_user.pu
+@enduml

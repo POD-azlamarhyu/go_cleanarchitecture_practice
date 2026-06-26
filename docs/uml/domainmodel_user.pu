@@ -1,0 +1,55 @@
+@startuml domain-models-user
+left to right direction
+
+skinparam ClassBackgroundColor Ivory
+skinparam ClassBorderColor Indigo
+
+title ユーザーコンテキスト(User Context)
+
+package UserContext as UM #line:Gray {
+
+    class "ユーザー" as Users <<Model>> #line.bold {
+        - userId: UUID
+        - username: string
+        - email: string
+        - password: string
+        - icon: file
+    }
+    note bottom of Users
+        - ユーザーはシステムに登録された個人を表します。
+        - ユーザーは一意のuserIdで識別され、ユーザー名、
+            メールアドレス、パスワード、アイコンなどの属性を持ちます。
+        - username、email、passwordは必須項目です。
+    end note
+
+    class "ロール" as Role <<Model>> #line.bold {
+        - roleId: UUID
+        - name: string
+        - description: string
+    }
+
+    note bottom of Role
+        - ユーザはRoleを持っている。Roleによってリソースにアクセスできる範囲が異なる。
+        - ロールは複数存在し、Admin, Moderator, SuperUser, Normal, Guestがある。
+        - 基本的にはAdminが最も権限が強い。運営者用のもので、一般ユーザはNormal権限を付与される。
+    end note
+
+    class "クレデンシャル" as Credential <<Model>> #line.bold {
+        - email: string
+        - password: string
+    }
+
+    class "セッション" as Session <<Model>> #line.bold {
+        - sessionId: UUID
+        - userId: UUID
+        - accessToken: string
+        - refreshToken: string
+        - accessTokenExpiresAt: timestamp
+        - refreshTokenExpiresAt: timestamp
+    }
+}
+
+Users "1" o--> "1..*" Role : has >
+Users "1" o--> "1" Credential : login body 
+Users "1" o--o "1..5" Session 
+@enduml
