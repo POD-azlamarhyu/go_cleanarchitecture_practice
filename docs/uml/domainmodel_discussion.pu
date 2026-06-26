@@ -4,14 +4,12 @@ left to right direction
 
 skinparam ClassBackgroundColor Ivory
 skinparam ClassBorderColor Indigo
-skinparam EntityBackgroundColor Ivory
-skinparam EntityBorderColor Indigo
 
 title 議論コンテキスト(Discussion Context)
 
 package DiscussionContext as DM #line:Gray {
 
-    entity "参加者" as User << (E, Red) Entity >> #line.bold {
+    class "参加者" as Participants << (E, Red) Entity >> #line.bold {
         - userId: UUID
         - username: string
         - email: string
@@ -19,27 +17,26 @@ package DiscussionContext as DM #line:Gray {
         - icon: file
         - role: string
         --
-        + create(): User
-        + of(): User
-        + reBuild(): User 
+        + create(): Participants
+        + of(): Participants
+        + reBuild(): Participants 
         * login()
         * logout()
         * isAuthenticated() 
     }
-    note bottom of User
-        - 参加者はシステムに登録された個人を表します。
-        - 参加者は一意のuserIdで識別され、参加者名、
-            メールアドレス、パスワード、アイコンなどの属性を持ちます。
-        - username、email、passwordは必須項目です。
+    note bottom of Participants
+        - システムに登録されたユーザを、ここではParticipantsとして表します。
+        - 参加者は一意のuserIdで識別され、それぞれ別のユーザとして扱われます。
     end note
 
-    note top of User
+    note top of Participants
         - 参加者は複数のメイントピックを作成でき、複数の議論に参加できます。
         - 参加者はコメントを投稿したり、サブディスカッションに参加したりすることもできます。
         - 参加者はRoleを持っている。Roleによってリソースにアクセスできる範囲が異なる
+        - モデレーターには、議論の管理や不適切なコンテンツの削除などの権限が与えられる。
     end note
 
-    entity "メイントピック" as MainTopic << (E, Red) Entity >> #line.bold {
+    class "メイントピック" as MainTopic << (E, Red) Entity >> #line.bold {
         - maintopicId: long
         - title: string
         - description: string
@@ -58,7 +55,7 @@ package DiscussionContext as DM #line:Gray {
         - メイントピックに参加できる人数を制限する可能性があり（検討の余地あり）
     end note
 
-    entity "議論" as Discussion << (E, Red) Entity >> #line.bold {
+    class "ディスカッション" as Discussion << (E, Red) Entity >> #line.bold {
         - discussionId: long
         - text: string
         - createdOn: timestamp
@@ -71,7 +68,7 @@ package DiscussionContext as DM #line:Gray {
         + of(): Discussion
     }
 
-    entity "サブディスカッション" as SubDiscussion << (R, Red) Entity >> #line.bold {
+    class "サブディスカッション" as SubDiscussion << (E, Red) Entity >> #line.bold {
         - subDiscussionId: long
         - text: string
         - createdOn: timestamp
@@ -81,7 +78,7 @@ package DiscussionContext as DM #line:Gray {
         - dislike: number
     }
 
-    entity "サブトピック" as SubTopic << (R, Red) Entity >> #line.bold {
+    class "サブトピック" as SubTopic << (E, Red) Entity >> #line.bold {
         - subTopicId: long
         - title: string
         - description: string
@@ -91,7 +88,7 @@ package DiscussionContext as DM #line:Gray {
         - watch: number
     }
 
-    entity "コメント" as Comment << (R, Red) Entity >> #line.bold {
+    class "コメント" as Comment << (E, Red) Entity >> #line.bold {
         - commentId: long
         - text: string
         - image: string
@@ -102,13 +99,13 @@ package DiscussionContext as DM #line:Gray {
 }
 
 
-User "1..*" o--> " 0..*" MainTopic : join
-User "1" --> "0..*" Discussion : discuss
+Participants "1..*" o--> " 0..*" MainTopic : join
+Participants "1" --> "0..*" Discussion : discuss
 MainTopic "1" o--> "0..*" Discussion :has >
 MainTopic "1" o--> "0..*" SubTopic : has >
 Discussion "1" o---> "0..*" Comment : has >
-User "1" ---> "0..*" Comment : comment
+Participants "1" ---> "0..*" Comment : comment
 SubTopic "1" o---> "0..*" SubDiscussion : has >
-User "1" ---> "0..*" SubDiscussion : discuss
+Participants "1" ---> "0..*" SubDiscussion : discuss
 
 @enduml
