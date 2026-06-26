@@ -4,12 +4,14 @@ left to right direction
 
 skinparam ClassBackgroundColor Ivory
 skinparam ClassBorderColor Indigo
+skinparam EntityBackgroundColor Ivory
+skinparam EntityBorderColor Indigo
 
 title 議論コンテキスト(Discussion Context)
 
 package DiscussionContext as DM #line:Gray {
 
-    class "ユーザー" as User <<Model>> #line.bold {
+    entity "参加者" as User << (E, Red) Entity >> #line.bold {
         - userId: UUID
         - username: string
         - email: string
@@ -25,19 +27,19 @@ package DiscussionContext as DM #line:Gray {
         * isAuthenticated() 
     }
     note bottom of User
-        - ユーザーはシステムに登録された個人を表します。
-        - ユーザーは一意のuserIdで識別され、ユーザー名、
+        - 参加者はシステムに登録された個人を表します。
+        - 参加者は一意のuserIdで識別され、参加者名、
             メールアドレス、パスワード、アイコンなどの属性を持ちます。
         - username、email、passwordは必須項目です。
     end note
 
     note top of User
-        - ユーザーは複数のメイントピックを作成でき、複数の議論に参加できます。
-        - ユーザーはコメントを投稿したり、サブディスカッションに参加したりすることもできます。
-        - ユーザはRoleを持っている。Roleによってリソースにアクセスできる範囲が異なる
+        - 参加者は複数のメイントピックを作成でき、複数の議論に参加できます。
+        - 参加者はコメントを投稿したり、サブディスカッションに参加したりすることもできます。
+        - 参加者はRoleを持っている。Roleによってリソースにアクセスできる範囲が異なる
     end note
 
-    class "メイントピック" as MainTopic << Model >> #line.bold {
+    entity "メイントピック" as MainTopic << (E, Red) Entity >> #line.bold {
         - maintopicId: long
         - title: string
         - description: string
@@ -50,13 +52,13 @@ package DiscussionContext as DM #line:Gray {
 
     note bottom of MainTopic
         - メイントピックは複数の議論とサブトピックを持つことができます。
-        - メイントピックはユーザーによって作成されます。
-        - ユーザはメイントピックを勝手に削除することはできない。
+        - メイントピックは参加者によって作成されます。
+        - 参加者はメイントピックを勝手に削除することはできない。
             削除できるのは、アドミンか自身が立てたメイントピックで参加者、閲覧者がいない場合のみ。
         - メイントピックに参加できる人数を制限する可能性があり（検討の余地あり）
     end note
 
-    class "議論" as Discussion << Model >> #line.bold {
+    entity "議論" as Discussion << (E, Red) Entity >> #line.bold {
         - discussionId: long
         - text: string
         - createdOn: timestamp
@@ -69,7 +71,7 @@ package DiscussionContext as DM #line:Gray {
         + of(): Discussion
     }
 
-    class "議論" as SubDiscussion << Model >> #line.bold {
+    entity "サブディスカッション" as SubDiscussion << (R, Red) Entity >> #line.bold {
         - subDiscussionId: long
         - text: string
         - createdOn: timestamp
@@ -79,7 +81,7 @@ package DiscussionContext as DM #line:Gray {
         - dislike: number
     }
 
-    class "サブトピック" as SubTopic << Model >> #line.bold {
+    entity "サブトピック" as SubTopic << (R, Red) Entity >> #line.bold {
         - subTopicId: long
         - title: string
         - description: string
@@ -89,7 +91,7 @@ package DiscussionContext as DM #line:Gray {
         - watch: number
     }
 
-    class "コメント" as Comment << Model >> #line.bold {
+    entity "コメント" as Comment << (R, Red) Entity >> #line.bold {
         - commentId: long
         - text: string
         - image: string
