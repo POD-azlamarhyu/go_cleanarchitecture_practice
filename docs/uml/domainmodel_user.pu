@@ -49,7 +49,7 @@ package UserContext as UM #line:Gray {
     }
 }
 
-User "1" o--> "1..*" Role : has >
+User "1" o--> "1..5" Role : has >
 User "1" o--> "1" Credential : login body 
-User "1" o--o "1..5" Session 
+User "1" o--o "1" Session
 @enduml
