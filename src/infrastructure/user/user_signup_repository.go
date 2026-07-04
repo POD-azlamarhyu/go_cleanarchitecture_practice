@@ -8,15 +8,15 @@ import (
 	"context"
 )
 
-type UserRepository struct {
+type userRepository struct {
 	db *sql.DB
 }
 
 func NewUserRepository(db *sql.DB) user.IUserRepository{
-	return &UserRepository{db: db}
+	return &userRepository{db: db}
 }
 
-func (ur *UserRepository) Save(ctx context.Context, user *user.User) error {
+func (ur *userRepository) Save(ctx context.Context, user *user.User) error {
 	slog.Info("Layer: Infrastructure, Context: User, Saving user to database",
 		slog.String("userId",user.GetUserId().String()),
 		slog.String("userName",user.GetUserName()),
