@@ -11,13 +11,13 @@ type SignupController struct {
 	signupUseCase *user.ISignUpUseCase
 }
 
-func NewSignupController(signupUseCase *user.ISignUpUseCase) *SignupController {
+func NewSignupController(signupUseCase user.ISignUpUseCase) *SignupController {
 	return &SignupController{
-		signupUseCase: signupUseCase,
+		signupUseCase: &signupUseCase,
 	}
 }
 
-func (c *SignupController) Handler(rw http.ResponseWriter, r *http.Request) {
+func (c *SignupController) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var input SignUpRequest
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
