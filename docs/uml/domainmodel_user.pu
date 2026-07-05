@@ -8,14 +8,14 @@ title ユーザーコンテキスト(User Context)
 
 package UserContext as UM #line:Gray {
 
-    class "ユーザー" as Users <<Model>> #line.bold {
+    class "ユーザー" as User <<Model>> #line.bold {
         - userId: UUID
         - username: string
         - email: string
         - password: string
         - icon: file
     }
-    note bottom of Users
+    note bottom of User
         - ユーザーはシステムに登録された個人を表します。
         - ユーザーは一意のuserIdで識別され、ユーザー名、
             メールアドレス、パスワード、アイコンなどの属性を持ちます。
@@ -49,7 +49,7 @@ package UserContext as UM #line:Gray {
     }
 }
 
-Users "1" o--> "1..*" Role : has >
-Users "1" o--> "1" Credential : login body 
-Users "1" o--o "1..5" Session 
+User "1" o--> "1..5" Role : has >
+User "1" o--> "1" Credential : login body 
+User "1" o--o "1" Session
 @enduml
