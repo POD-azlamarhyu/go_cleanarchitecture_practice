@@ -18,6 +18,7 @@ type responseWriterWrapper struct {
 
 func Logger(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request){
+		requestLogger(req)
 		buffer := &bytes.Buffer{}
 		rww := newResponseWriterWrapper(rw, buffer)
 		handler.ServeHTTP(rww, req)
